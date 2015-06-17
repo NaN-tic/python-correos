@@ -66,6 +66,7 @@
                 <ReferenciaCliente2>${ReferenciaCliente2}</ReferenciaCliente2>
                 <TipoFranqueo>${TipoFranqueo}</TipoFranqueo>
                 <ModalidadEntrega>${ModalidadEntrega}</ModalidadEntrega>
+                <OficinaElegida py:if="OficinaElegida">${OficinaElegida}</OficinaElegida>
                 <Pesos>
                     <Peso>
                         <TipoPeso>${TipoPeso}</TipoPeso>

@@ -32,6 +32,17 @@ Test connection
     with API(username, password, code, debug) as correos_api:
         print correos_api.test_connection()
 
+Oficinas
+--------
+
+Get Correos offices by zip
+
+.. code-block:: python
+
+    with API(username, password, code, debug) as correos_api:
+        zip = '08720'
+        print correos_api.oficinas(zip)
+
 Create/send shipment to Correos
 -------------------------------
 

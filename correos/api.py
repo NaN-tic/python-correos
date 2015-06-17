@@ -108,3 +108,46 @@ class API(object):
         if result == '0':
             return 'Succesfully delivery test sended to Correos with tracking "%s"' % (reference)
         return 'Error send a delivery test to Correos: %s' % (reference)
+
+    def oficinas(self, zip):
+        """
+        Oficinas Correos
+        """
+        tmpl = loader.load('oficinas.xml')
+
+        url = 'http://localizadoroficinas.correos.es/localizadoroficinas'
+        vals = {
+            'zip': zip,
+            }
+
+        xml = tmpl.generate(**vals).render()
+
+        headers = {
+            'Content-Type': 'application/soap+xml; charset=utf-8',
+            'Content-Type': 'text/xml; charset=utf-8',
+            'Content-Length': len(xml),
+            }
+        request = urllib2.Request(url, xml, headers)
+        try:
+            response = urllib2.urlopen(request)
+        except:
+            return
+        result = response.read()
+        dom = parseString(result)
+
+        oficinas = []
+        for item in dom.getElementsByTagName('item'):
+            oficinas.append({
+                'code': item.getElementsByTagName('ns-980841924:unidad')[0].firstChild.data,
+                'name': item.getElementsByTagName('ns-980841924:nombre')[0].firstChild.data,
+                'address': item.getElementsByTagName('ns-980841924:direccion')[0].firstChild.data,
+                'zip': item.getElementsByTagName('ns-980841924:cp')[0].firstChild.data,
+                'code_city': item.getElementsByTagName('ns-980841924:codLocalidad')[0].firstChild.data,
+                'city': item.getElementsByTagName('ns-980841924:descLocalidad')[0].firstChild.data,
+                'phone': item.getElementsByTagName('ns-980841924:telefono')[0].firstChild.data,
+                'timetable': 'LV: %s - S: %s' % (
+                    item.getElementsByTagName('ns-980841924:horarioLV')[0].firstChild.data,
+                    item.getElementsByTagName('ns-980841924:horarioS')[0].firstChild.data,
+                    ),
+                })
+        return oficinas

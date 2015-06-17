@@ -1,6 +1,7 @@
 #This file is part of correos. The COPYRIGHT file at the top level of
 #this repository contains the full copyright notices and license terms.
 from correos.api import API
+from correos.utils import delivery_oficina
 
 from stdnum import iban
 from xml.dom.minidom import parseString
@@ -32,6 +33,8 @@ class Picking(API):
         error = None
 
         tmpl = loader.load('picking_send.xml')
+        services = delivery_oficina()
+        CodProducto = data.get('CodProducto')
 
         vals = {
             'code': self.code,
@@ -72,11 +75,10 @@ class Picking(API):
             'DestinatarioEmail': data.get('DestinatarioEmail', '')[:50],
             'DestinatarioNumeroSMS': data.get('DestinatarioNumeroSMS', '')[:12],
             'DestinatarioIdioma': data.get('DestinatarioIdioma', '1'),
-            'CodProducto': data.get('CodProducto', ''),
+            'CodProducto': CodProducto,
             'ReferenciaCliente': data.get('ReferenciaCliente', ''),
             'ReferenciaCliente2': data.get('ReferenciaCliente2', ''),
             'TipoFranqueo': data.get('TipoFranqueo', 'FP'),
-            'ModalidadEntrega': data.get('ModalidadEntrega', 'ST'),
             'TipoPeso': data.get('TipoPeso', 'R'),
             'Peso': data.get('Peso', '100'),
             'Largo': data.get('Largo', ''),
@@ -91,7 +93,33 @@ class Picking(API):
             'Observaciones2': data.get('Observaciones2', '')[:45],
             'InstruccionesDevolucion': data.get('InstruccionesDevolucion', 'D'),
             }
-    
+
+        if CodProducto in services:
+            vals['ModalidadEntrega'] = services.get(CodProducto)
+            if data.get('OficinaElegida'):
+                vals['OficinaElegida'] = data.get('OficinaElegida')
+            else:
+                zip = data.get('DestinatarioCP')
+                if not zip:
+                    error = '%s: Add a delivery zip' % (data.get('ReferenciaCliente'))
+                    return reference, label, error
+
+                oficina = None
+                for o in self.oficinas(zip):
+                    if o['zip'] == zip:
+                        oficina = o['code']
+                        break
+                if not oficina:
+                    error = '%s: Can found a Oficina related with Zip %s' % (
+                        data.get('ReferenciaCliente'),
+                        zip,
+                        )
+                    return reference, label, error
+                vals['OficinaElegida'] = oficina
+        else:
+            vals['ModalidadEntrega'] = 'ST'
+            vals['OficinaElegida'] = None
+
         if data.get('Aduana'):
             vals['Aduana'] = True
             vals['AduanaTipoEnvio'] = data.get('AduanaTipoEnvio', '2')

@@ -7,7 +7,6 @@ debug = True
 
 from correos.picking import *
 from correos.utils import services
-import base64
 from base64 import decodestring
 
 print "Correos services"
@@ -17,6 +16,10 @@ print services
 with API(username, password, code, debug) as correos_api:
     print "Test connection"
     print correos_api.test_connection()
+
+    print "Oficinas"
+    zip = '08720'
+    print correos_api.oficinas(zip)
 
 with Picking(username, password, code, debug) as picking_api:
     print "Send a new picking to Correos - Label PDF"
@@ -62,10 +65,20 @@ with Picking(username, password, code, debug) as picking_api:
     data['NumeroCuenta'] = '00720101930000122351'
     reference, label, error = picking_api.create(data)
 
-    print "Picking Reembolso send %s" % reference
+    print "Picking Rembolso send %s" % reference
     with open("/tmp/correos-label-reembolso.pdf","wb") as f:
         f.write(decodestring(label))
     print "Generated PDF label in /tmp/correos-label-reembolso.pdf"
+
+    # Test a shipment ModalidadEntrega LS (Oficina elejida)
+    data['CodProducto'] = 'S0236'
+    # data['OficinaElegida'] = '0872002' # Vilafranca
+    reference, label, error = picking_api.create(data)
+
+    print "Picking Oficina send %s" % reference
+    with open("/tmp/correos-label-oficina.pdf","wb") as f:
+        f.write(decodestring(label))
+    print "Generated PDF label in /tmp/correos-label-oficina.pdf"
 
     print "Get Label PDF"
     data = {}
