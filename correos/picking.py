@@ -2,6 +2,7 @@
 #this repository contains the full copyright notices and license terms.
 from correos.api import API
 
+from stdnum import iban
 from xml.dom.minidom import parseString
 import os
 import datetime
@@ -126,6 +127,17 @@ class Picking(API):
                 return reference, label, error
             price = str(int(price * 100))
             vals['Importe'] = price.rjust(6, '0') # 900,50 = 090050
+            # check if IBAN number or CC
+            cc = data.get('NumeroCuenta')
+            if not cc:
+                error = '%s: Add a NumeroCuenta when is Reembolso' % (data.get('ReferenciaCliente'))
+                return reference, label, error
+            cc = iban.compact(cc)
+            cc = iban.format(cc)
+            if iban.is_valid(cc):
+                vals['NumeroCuenta'] = iban.compact(cc[5:])
+            else:
+                vals['NumeroCuenta'] = iban.compact(cc)
 
         xml = tmpl.generate(**vals).render()
         result = self.connect(xml, 'Preregistro')

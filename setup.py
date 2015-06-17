@@ -32,6 +32,7 @@ setup(name='correos',
             ],
         install_requires=[
             'genshi',
+            'python-stdnum',
             ],
         license='GPL-3',
         extras_require={
