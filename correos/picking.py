@@ -82,7 +82,7 @@ class Picking(API):
             'Alto': data.get('Alto', ''),
             'Ancho': data.get('Ancho', ''),
             'ImporteSeguro': data.get('ImporteSeguro', ''),
-            'TipoReembolso': data.get('TipoReembolso', ''),
+            'TipoReembolso': data.get('TipoReembolso', 'RC'),
             'Importe': data.get('Importe', ''),
             'NumeroCuenta': data.get('NumeroCuenta', ''),
             'EntregaExclusivaDestinatario': data.get('EntregaExclusivaDestinatario', 'N'),
@@ -113,8 +113,19 @@ class Picking(API):
 
         if not data.get('ImporteSeguro'):
             vals['ImporteSeguro'] = False
+
         if not data.get('Reembolso'):
             vals['Reembolso'] = False
+        else:
+            vals['Reembolso'] = True
+            # Spain delivery max price is 1000
+            # TODO check price max other countries
+            price = data.get('Importe')
+            if not price or price > 1000:
+                error = '%s: Price is None or larger than 1000' % (data.get('ReferenciaCliente'))
+                return reference, label, error
+            price = str(int(price * 100))
+            vals['Importe'] = price.rjust(6, '0') # 900,50 = 090050
 
         xml = tmpl.generate(**vals).render()
         result = self.connect(xml, 'Preregistro')

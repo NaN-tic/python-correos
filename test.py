@@ -55,6 +55,18 @@ with Picking(username, password, code, debug) as picking_api:
         f.write(decodestring(label))
     print "Generated PDF label in /tmp/correos-label.pdf"
 
+    # Test a shipment with "reembolso"
+    data['Reembolso'] = True
+    data['TipoReembolso'] = 'RC'
+    data['Importe'] = 125.45
+    data['NumeroCuenta'] = '00720101930000122351'
+    reference, label, error = picking_api.create(data)
+
+    print "Picking Reembolso send %s" % reference
+    with open("/tmp/correos-label-reembolso.pdf","wb") as f:
+        f.write(decodestring(label))
+    print "Generated PDF label in /tmp/correos-label-reembolso.pdf"
+
     print "Get Label PDF"
     data = {}
     data['CodEnvio'] = reference
