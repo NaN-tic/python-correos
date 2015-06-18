@@ -37,10 +37,5 @@ def delivery_oficina():
     services = {
         'S0236': 'LS',
         'S0133': 'LS',
-        'S0235': 'ST',
-        'S0132': 'ST',
-        'S0030': 'ST',
-        'S0175': 'ST',
-        'S0177': 'ST',
         }
     return services
