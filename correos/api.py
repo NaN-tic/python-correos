@@ -84,7 +84,7 @@ class API(object):
     def test_connection(self):
         """
         Test connection to Correos webservices
-        Send XML to Seur and return error send data
+        Send XML to Correos and return error send data
         """
         tmpl = loader.load('test_connection.xml')
 
