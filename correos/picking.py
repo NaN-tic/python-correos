@@ -169,6 +169,9 @@ class Picking(API):
 
         xml = tmpl.generate(**vals).render()
         result = self.connect(xml, 'Preregistro')
+        if not result:
+            return reference, label, error
+
         dom = parseString(result)
 
         Error = dom.getElementsByTagName('Error')
@@ -215,6 +218,9 @@ class Picking(API):
             }
         xml = tmpl.generate(**vals).render()
         result = self.connect(xml, 'SolicitudEtiquetaOp')
+        if not result:
+            return label
+
         dom = parseString(result)
 
         Fichero = dom.getElementsByTagName('Fichero')

@@ -13,7 +13,7 @@ print "Correos services"
 services = services()
 print services
 
-with API(username, password, code, debug) as correos_api:
+with API(username, password, code, debug=debug) as correos_api:
     print "Test connection"
     print correos_api.test_connection()
 
@@ -21,7 +21,7 @@ with API(username, password, code, debug) as correos_api:
     zip = '08720'
     print correos_api.oficinas(zip)
 
-with Picking(username, password, code, debug) as picking_api:
+with Picking(username, password, code, debug=debug) as picking_api:
     print "Send a new picking to Correos - Label PDF"
 
     data = {}

@@ -5,6 +5,7 @@ from xml.dom.minidom import parseString
 import urllib2
 import base64
 import os
+import socket
 import datetime
 import genshi
 import genshi.template
@@ -23,9 +24,10 @@ class API(object):
         'username',
         'password',
         'code',
+        'timeout',
     )
 
-    def __init__(self, username, password, code, debug=False):
+    def __init__(self, username, password, code, timeout=None, debug=False):
         """
         This is the Base API class which other APIs have to subclass. By
         default the inherited classes also get the properties of this
@@ -41,11 +43,13 @@ class API(object):
         :param username: Correos API username
         :param password: Correos API password
         :param code: Correos API CodeEtiquetador
+        :param timeout: int number of seconds to lost connection.
         """
         self.url = correos_url(debug)
         self.username = username
         self.password = password
         self.code = code
+        self.timeout = timeout
 
     def __enter__(self):
         return self
@@ -76,10 +80,12 @@ class API(object):
             }
         request = urllib2.Request(self.url, xml, headers)
         try:
-            response = urllib2.urlopen(request)
-        except:
+            response = urllib2.urlopen(request, timeout=self.timeout)
+            return response.read()
+        except socket.timeout as err:
             return
-        return response.read()
+        except socket.error as err:
+            return
 
     def test_connection(self):
         """
