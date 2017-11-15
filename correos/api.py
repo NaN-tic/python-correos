@@ -3,6 +3,7 @@
 from correos.utils import correos_url
 from xml.dom.minidom import parseString
 import urllib2
+import ssl
 import base64
 import os
 import socket
@@ -62,7 +63,7 @@ class API(object):
         Connect to the Webservices and return XML data from correos
 
         :param xml: XML data.
-        
+
         Return XML object
         """
         if not action:
@@ -80,7 +81,8 @@ class API(object):
             }
         request = urllib2.Request(self.url, xml, headers)
         try:
-            response = urllib2.urlopen(request, timeout=self.timeout)
+            response = urllib2.urlopen(request, timeout=self.timeout,
+                    context=ssl._create_unverified_context())
             return response.read()
         except socket.timeout as err:
             return
