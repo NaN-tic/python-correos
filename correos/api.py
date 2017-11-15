@@ -137,7 +137,8 @@ class API(object):
             }
         request = urllib2.Request(url, xml, headers)
         try:
-            response = urllib2.urlopen(request)
+            response = urllib2.urlopen(request, timeout=self.timeout,
+                    context=ssl._create_unverified_context())
         except:
             return
         result = response.read()
