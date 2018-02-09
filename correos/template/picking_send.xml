@@ -93,10 +93,14 @@
                     <EnvioComercial>${AduanaEnvioComercial}</EnvioComercial>
                     <FacturaSuperiora500>${AduanaFacturaSuperiora500}</FacturaSuperiora500>
                     <DUAConCorreos>${AduanaDUAConCorreos}</DUAConCorreos>
-                    <DescAduanera>${AduanaDescAduanera}</DescAduanera>
-                    <Factura>${AduanaFactura}</Factura>
-                    <Licencia>${AduanaLicencia}</Licencia>
-                    <Certificado>${AduanaCertificado}</Certificado>
+                    <DescAduanera>
+                       <DATOSADUANA>
+                          <Cantidad>${AduanaCantidad}</Cantidad>
+                          <Descripcion>${AduanaDescripcion}</Descripcion>
+                          <Pesoneto>${AduanaPesoneto}</Pesoneto>
+                          <Valorneto>${AduanaValorneto}</Valorneto>
+                       </DATOSADUANA>
+                    </DescAduanera>
                 </Aduana>
             </Envio>
         </PreregistroEnvio>

@@ -126,10 +126,10 @@ class Picking(API):
             vals['AduanaEnvioComercial'] = data.get('AduanaEnvioComercial', 'S')
             vals['AduanaFacturaSuperiora500'] = data.get('AduanaFacturaSuperiora500', 'N')
             vals['AduanaDUAConCorreos'] = data.get('AduanaDUAConCorreos', 'N')
-            vals['AduanaDescAduanera'] = data.get('AduanaDescAduanera', '')
-            vals['AduanaFactura'] = data.get('AduanaFactura', 'S')
-            vals['AduanaLicencia'] = data.get('AduanaLicencia', 'N')
-            vals['AduanaCertificado'] = data.get('AduanaCertificado', 'N')
+            vals['AduanaCantidad'] = data.get('AduanaCantidad', '1')
+            vals['AduanaDescripcion'] = data.get('AduanaDescripcion', '')
+            vals['AduanaPesoneto'] = data.get('AduanaPesoneto', '100')
+            vals['AduanaValorneto'] = data.get('AduanaValorneto', '')
         else:
             vals['Aduana'] = False
 
