@@ -29,10 +29,10 @@
                     <Provincia>${RemitenteProvincia}</Provincia>
                 </DatosDireccion>
                 <CP>${RemitenteCP}</CP>
-                <Telefonocontacto>${RemitenteTelefonocontacto}</Telefonocontacto>
+                <Telefonocontacto>${RemitenteTelefonocontacto.replace(' ', '')}</Telefonocontacto>
                 <Email>${RemitenteEmail}</Email>
-                <DatosSMS>
-                    <NumeroSMS>${RemitenteNumeroSMS}</NumeroSMS>
+                <DatosSMS py:if="RemitenteNumeroSMS">
+                    <NumeroSMS>${RemitenteNumeroSMS.replace(' ', '')}</NumeroSMS>
                     <Idioma>${RemitenteIdioma}</Idioma>
                 </DatosSMS>
             </Remitente>
@@ -53,7 +53,7 @@
                 <CP>${DestinatarioCP}</CP>
                 <ZIP>${DestinatarioZIP}</ZIP>
                 <Pais>${DestinatarioPais}</Pais>
-                <Telefonocontacto>${DestinatarioTelefonocontacto}</Telefonocontacto>
+                <Telefonocontacto>${DestinatarioTelefonocontacto.replace(' ', '')}</Telefonocontacto>
                 <Email>${DestinatarioEmail}</Email>
                 <DatosSMS>
                     <NumeroSMS>${DestinatarioNumeroSMS}</NumeroSMS>
