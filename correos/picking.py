@@ -2,7 +2,7 @@
 #this repository contains the full copyright notices and license terms.
 from correos.api import API
 from correos.utils import delivery_oficina
-
+from decimal import Decimal
 from stdnum import iban
 from xml.dom.minidom import parseString
 import os
@@ -129,7 +129,9 @@ class Picking(API):
             vals['AduanaCantidad'] = data.get('AduanaCantidad', '1')
             vals['AduanaDescripcion'] = data.get('AduanaDescripcion', '')
             vals['AduanaPesoneto'] = data.get('AduanaPesoneto', '100')
-            vals['AduanaValorneto'] = data.get('AduanaValorneto', '')
+            aduana_price = data.get('AduanaValorneto', Decimal('0.0'))
+            # 900,50 = 090050
+            vals['AduanaValorneto'] = str(int(aduana_price * 100)).rjust(6, '0')
         else:
             vals['Aduana'] = False
 
@@ -143,9 +145,7 @@ class Picking(API):
         if not data.get('ImporteSeguro'):
             vals['ImporteSeguro'] = False
 
-        if not data.get('Reembolso'):
-            vals['Reembolso'] = False
-        else:
+        if data.get('Reembolso'):
             vals['Reembolso'] = True
             # Spain delivery max price is 1000
             # TODO check price max other countries
@@ -153,8 +153,8 @@ class Picking(API):
             if not price or price > 1000:
                 error = '%s: Price is None or larger than 1000' % (data.get('ReferenciaCliente'))
                 return reference, label, error
-            price = str(int(price * 100))
-            vals['Importe'] = price.rjust(6, '0') # 900,50 = 090050
+            # 900,50 = 090050
+            vals['Importe'] = str(int(price * 100)).rjust(6, '0')
             # check if IBAN number or CC
             cc = data.get('NumeroCuenta')
             if not cc:
@@ -166,6 +166,8 @@ class Picking(API):
                 vals['NumeroCuenta'] = iban.compact(cc[5:])
             else:
                 vals['NumeroCuenta'] = iban.compact(cc)
+        else:
+            vals['Reembolso'] = False
 
         xml = tmpl.generate(**vals).render()
         result = self.connect(xml, 'Preregistro')
