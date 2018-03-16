@@ -11,7 +11,7 @@ def correos_url(debug=False):
         return 'https://preregistroenviospre.correos.es/preregistroenvios'
     else:
         return 'https://preregistroenvios.correos.es/preregistroenvios'
-        
+
 def services():
     services = {
         'S0030': 'PAQUETE POSTAL PRIORITARIO (I)',
@@ -33,9 +33,9 @@ def services():
     }
     return services
 
-def delivery_oficina():
-    services = {
-        'S0236': 'LS',
-        'S0133': 'LS',
-        }
-    return services
+DELIVERY_OFICINA = {
+    'S0236': 'LS',
+    'S0133': 'LS',
+    }
+
+CASHONDELIVERY_SERVICES = ['S0132', 'S0235']

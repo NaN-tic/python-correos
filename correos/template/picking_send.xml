@@ -55,7 +55,7 @@
                 <Pais>${DestinatarioPais}</Pais>
                 <Telefonocontacto>${DestinatarioTelefonocontacto.replace(' ', '')}</Telefonocontacto>
                 <Email>${DestinatarioEmail}</Email>
-                <DatosSMS>
+                <DatosSMS py:if="DestinatarioNumeroSMS">
                     <NumeroSMS>${DestinatarioNumeroSMS}</NumeroSMS>
                     <Idioma>${DestinatarioIdioma}</Idioma>
                 </DatosSMS>

@@ -1,7 +1,7 @@
 #This file is part of correos. The COPYRIGHT file at the top level of
 #this repository contains the full copyright notices and license terms.
 from correos.api import API
-from correos.utils import delivery_oficina
+from correos.utils import DELIVERY_OFICINA
 from decimal import Decimal
 from stdnum import iban
 from xml.dom.minidom import parseString
@@ -32,7 +32,6 @@ class Picking(API):
         error = None
 
         tmpl = loader.load('picking_send.xml')
-        services = delivery_oficina()
         CodProducto = data.get('CodProducto')
 
         vals = {
@@ -93,8 +92,8 @@ class Picking(API):
             'InstruccionesDevolucion': data.get('InstruccionesDevolucion', 'D'),
             }
 
-        if CodProducto in services:
-            vals['ModalidadEntrega'] = services.get(CodProducto)
+        if CodProducto in DELIVERY_OFICINA:
+            vals['ModalidadEntrega'] = DELIVERY_OFICINA.get(CodProducto)
             if data.get('OficinaElegida'):
                 vals['OficinaElegida'] = data.get('OficinaElegida')
             else:
